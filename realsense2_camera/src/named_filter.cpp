@@ -73,7 +73,7 @@ rs2::frame NamedFilter::Process(rs2::frame frame)
 }
 
 
-PointcloudFilter::PointcloudFilter(std::shared_ptr<rs2::filter> filter, rclcpp::Node& node, std::shared_ptr<Parameters> parameters, rclcpp::Logger logger, bool is_enabled):
+PointcloudFilter::PointcloudFilter(std::shared_ptr<rs2::filter> filter, rclcpp_lifecycle::LifecycleNode& node, std::shared_ptr<Parameters> parameters, rclcpp::Logger logger, bool is_enabled):
     NamedFilter(filter, parameters, logger, is_enabled, false),
     _node(node),
     _allow_no_texture_points(ALLOW_NO_TEXTURE_POINTS),

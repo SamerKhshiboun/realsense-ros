@@ -88,7 +88,7 @@ size_t SyncedImuPublisher::getNumSubscribers()
     return _publisher->get_subscription_count();
 }
 
-BaseRealSenseNode::BaseRealSenseNode(rclcpp::Node& node,
+BaseRealSenseNode::BaseRealSenseNode(rclcpp_lifecycle::LifecycleNode& node,
                                      rs2::device dev,
                                      std::shared_ptr<Parameters> parameters,
                                      bool use_intra_process) :

@@ -19,7 +19,7 @@ from launch import LaunchDescription
 import launch_ros.actions
 from launch.actions import DeclareLaunchArgument, OpaqueFunction
 from launch.substitutions import LaunchConfiguration
-
+from launch_ros.actions import LifecycleNode
 
 configurable_parameters = [{'name': 'camera_name',                  'default': 'camera', 'description': 'camera unique name'},
                            {'name': 'serial_no',                    'default': "''", 'description': 'choose device by serial number'},
@@ -88,7 +88,7 @@ def launch_setup(context, *args, **kwargs):
     # Realsense
     if (os.getenv('ROS_DISTRO') == "dashing") or (os.getenv('ROS_DISTRO') == "eloquent"):
         return [
-            launch_ros.actions.Node(
+            launch_ros.actions.LifecycleNode(
                 package='realsense2_camera',
                 node_namespace=LaunchConfiguration("camera_name"),
                 node_name=LaunchConfiguration("camera_name"),
@@ -103,7 +103,7 @@ def launch_setup(context, *args, **kwargs):
             ]
     else:
         return [
-            launch_ros.actions.Node(
+            launch_ros.actions.LifecycleNode(
                 package='realsense2_camera',
                 namespace=LaunchConfiguration("camera_name"),
                 name=LaunchConfiguration("camera_name"),

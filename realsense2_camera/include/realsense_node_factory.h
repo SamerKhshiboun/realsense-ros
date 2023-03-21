@@ -16,6 +16,7 @@
 
 // cpplint: c system headers
 #include "constants.h"
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "base_realsense_node.h"
 #include <builtin_interfaces/msg/time.hpp>
 #include <console_bridge/console.h>
@@ -34,7 +35,7 @@
 
 namespace realsense2_camera
 {
-    class RealSenseNodeFactory : public rclcpp::Node
+    class RealSenseNodeFactory : public rclcpp_lifecycle::LifecycleNode //public rclcpp::Node
     {
     public:
         explicit RealSenseNodeFactory(const rclcpp::NodeOptions & node_options = rclcpp::NodeOptions());
@@ -42,6 +43,13 @@ namespace realsense2_camera
             const std::string & node_name, const std::string & ns,
             const rclcpp::NodeOptions & node_options = rclcpp::NodeOptions());
         virtual ~RealSenseNodeFactory();
+
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+  on_configure(const rclcpp_lifecycle::State &)
+  {
+    ROS_INFO_STREAM("Samer......");
+    return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
+  }
 
     private:
         void init();

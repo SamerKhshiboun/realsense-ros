@@ -23,7 +23,7 @@ namespace realsense2_camera
     class Parameters
     {
         public:
-            Parameters(rclcpp::Node& node);
+            Parameters(rclcpp_lifecycle::LifecycleNode& node);
             ~Parameters();
             template <class T>
             T setParam(std::string param_name, const T& initial_value, 
@@ -51,7 +51,7 @@ namespace realsense2_camera
             void monitor_update_functions();
 
         private:
-            rclcpp::Node& _node;
+            rclcpp_lifecycle::LifecycleNode& _node;
             rclcpp::Logger _logger;
             std::map<std::string, std::function<void(const rclcpp::Parameter&)> > _param_functions;
             std::map<void*, std::string> _param_names;

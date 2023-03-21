@@ -17,6 +17,8 @@
 #include <librealsense2/rs.hpp>
 #include <librealsense2/rsutil.h>
 #include "constants.h"
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
+
 
 // cv_bridge.h last supported version is humble
 #if defined(CV_BRDIGE_HAS_HPP)
@@ -25,6 +27,7 @@
 #include <cv_bridge/cv_bridge.h>
 #endif
 
+#include "rclcpp/rclcpp.hpp"
 #include <diagnostic_updater/diagnostic_updater.hpp>
 #include <diagnostic_updater/publisher.hpp>
 #include "realsense2_camera_msgs/msg/imu_info.hpp"
@@ -112,7 +115,7 @@ namespace realsense2_camera
     class BaseRealSenseNode
     {
     public:
-        BaseRealSenseNode(rclcpp::Node& node,
+        BaseRealSenseNode(rclcpp_lifecycle::LifecycleNode& node,
                           rs2::device dev,
                           std::shared_ptr<Parameters> parameters,
                           bool use_intra_process = false);
@@ -147,7 +150,7 @@ namespace realsense2_camera
 
         std::string _base_frame_id;
         bool _is_running;
-        rclcpp::Node& _node;
+        rclcpp_lifecycle::LifecycleNode& _node;
         std::string _camera_name;
         std::vector<rs2_option> _monitor_options;
         rclcpp::Logger _logger;

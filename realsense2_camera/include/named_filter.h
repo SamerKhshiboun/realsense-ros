@@ -51,7 +51,7 @@ namespace realsense2_camera
     class PointcloudFilter : public NamedFilter
     {
         public:
-            PointcloudFilter(std::shared_ptr<rs2::filter> filter, rclcpp::Node& node, std::shared_ptr<Parameters> parameters, rclcpp::Logger logger, bool is_enabled=false);
+            PointcloudFilter(std::shared_ptr<rs2::filter> filter, rclcpp_lifecycle::LifecycleNode& node, std::shared_ptr<Parameters> parameters, rclcpp::Logger logger, bool is_enabled=false);
         
             void setPublisher();
             void Publish(rs2::points pc, const rclcpp::Time& t, const rs2::frameset& frameset, const std::string& frame_id);
@@ -61,7 +61,7 @@ namespace realsense2_camera
 
         private:
             bool _is_enabled_pc;
-            rclcpp::Node& _node;
+            rclcpp_lifecycle::LifecycleNode& _node;
             bool _allow_no_texture_points;
             bool _ordered_pc;
             std::mutex _mutex_publisher;

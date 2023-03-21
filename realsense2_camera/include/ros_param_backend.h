@@ -15,13 +15,15 @@
 #pragma once
 
 #include <rclcpp/rclcpp.hpp>
+#include <rclcpp_lifecycle/lifecycle_node.hpp>
+
 
 namespace realsense2_camera
 {
     class ParametersBackend
     {
         public:
-            ParametersBackend(rclcpp::Node& node) : 
+            ParametersBackend(rclcpp_lifecycle::LifecycleNode& node) : 
                 _node(node),
                 _logger(node.get_logger())
                 {}
@@ -38,7 +40,7 @@ namespace realsense2_camera
 
 
         private:
-            rclcpp::Node& _node;
+            rclcpp_lifecycle::LifecycleNode& _node;
             rclcpp::Logger _logger;
             std::shared_ptr<void> _ros_callback;
     };
