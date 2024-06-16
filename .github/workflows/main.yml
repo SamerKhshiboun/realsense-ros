@@ -40,19 +40,19 @@ jobs:
 
     steps:
 
-    - name: Setup ROS2 Workspace
-      run: |
-        mkdir -p ${{github.workspace}}/ros2/src
-
-    - uses: actions/checkout@v4
+    - name: Checkout realsense-ros
+      uses: actions/checkout@v4
       with:
-        path: 'ros2/src/realsense-ros'
+        path: '${{github.workspace}}/ros2/src/realsense-ros'
     
     - name: Check Copyright & Line-Endings
       shell: bash
       run: |
         cd ${{github.workspace}}/ros2/src/realsense-ros/scripts
         ./pr_check.sh 
+
+    - name: root suid tar to use caching
+      run: sudo chown root /bin/tar && sudo chmod u+s /bin/tar
 
     # setup-ros@v0.6 is the last version supporting foxy (EOL)
     # setup-ros@v0.7 is needed to support humble/iron/rolling/jazzy
@@ -67,8 +67,31 @@ jobs:
       uses: ros-tooling/setup-ros@v0.7
       with:
         required-ros-distributions: ${{ matrix.ros_distro }}
-                
+
+    - name: Get librealsense latest commit hash
+      id: librealsense-commit
+      run: |
+        echo "::set-output name=commit::$(git ls-remote https://github.com/IntelRealSense/librealsense.git HEAD | awk '{ print $1}')"
+
+    - name: Cache RealSense SDK build
+      id: cache-realsense
+      uses: actions/cache@v3
+      with:
+        path: |
+          /usr/local/lib/librealsense2*
+          /usr/local/include/librealsense2
+          /usr/local/lib/cmake/realsense2*
+          /usr/local/lib/pkgconfig/realsense2.pc
+          /usr/local/lib/librsutils.a
+          /usr/lib/python3/dist-packages/pyrealsense2*
+          /usr/local/lib/librealsense-file.a
+          /usr/local/lib/cmake/pyrealsense2*
+        key: ${{ runner.os }}-realsense-build-${{ steps.librealsense-commit.outputs.commit }}
+        restore-keys: |
+          ${{ runner.os }}-realsense-build-
+    
     - name: Build RealSense SDK 2.0 (development branch) from source
+      if: steps.cache-realsense.outputs.cache-hit != 'true'
       run: |
 
         # libusb-1.0-0-dev is needed for librealsense build in ubuntu 20.04
@@ -112,8 +135,9 @@ jobs:
     #    bag_filename="https://librealsense.intel.com/rs-tests/D435i_Depth_and_IMU_Stands_still.bag";
     #    wget $bag_filename -P "records/"
     #    sudo apt install ros-${{ matrix.ros_distro}}-launch-pytest
-       
-    - name: Install Packages For Tests
+
+    - name: Install Packages For Foxy Tests
+      if: ${{ matrix.ros_distro == 'foxy' }}
       run: |
         # To avoid mixing of 'apt' provided packages and 'pip' provided packages, one way is to create virtual env
         # and manage python packages within it. Ref: https://peps.python.org/pep-0668/
@@ -121,9 +145,22 @@ jobs:
         # Activate the virtual env such that following python related commands run within it.
         source .venv/bin/activate
         sudo apt-get install python3-pip
-        pip3 install numpy --upgrade
+        # numpy-quaternion needs numpy<2.0.0. Chose 1.24.1 as it is the highest version that support foxy also.
+        pip3 install --force-reinstall numpy==1.24.1
         pip3 install numpy-quaternion tqdm pyyaml
 
+    - name: Install Packages For Humble/Iron/Rolling/Jazzy Tests
+      if: ${{ matrix.ros_distro != 'foxy' }}
+      run: |
+        # To avoid mixing of 'apt' provided packages and 'pip' provided packages, one way is to create virtual env
+        # and manage python packages within it. Ref: https://peps.python.org/pep-0668/
+        python3 -m venv .venv
+        # Activate the virtual env such that following python related commands run within it.
+        source .venv/bin/activate
+        sudo apt-get install python3-pip
+        # numpy-quaternion needs numpy<2.0.0. Chose 1.26.4 as it is the highest working version.
+        pip3 install --force-reinstall numpy==1.26.4
+        pip3 install numpy-quaternion tqdm pyyaml
  
     - name: Run Tests
       run: |
