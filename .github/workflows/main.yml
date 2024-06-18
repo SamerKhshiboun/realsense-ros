@@ -71,11 +71,11 @@ jobs:
     - name: Get librealsense latest commit hash
       id: librealsense-commit
       run: |
-        echo "::set-output name=commit::$(git ls-remote https://github.com/IntelRealSense/librealsense.git HEAD | awk '{ print $1}')"
+        echo "commit=$(git ls-remote https://github.com/IntelRealSense/librealsense.git HEAD | awk '{ print $1}')" >> $GITHUB_LRS_COMMIT_HASH
 
     - name: Cache RealSense SDK build
       id: cache-realsense
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           /usr/local/lib/librealsense2*
@@ -87,7 +87,7 @@ jobs:
           /usr/local/lib/librealsense-file.a
           /usr/local/lib/cmake/pyrealsense2*
           /usr/local/lib/libfw.a
-        key: ${{ runner.os }}-realsense-build-${{ steps.librealsense-commit.outputs.commit }}
+        key: ${{ runner.os }}-realsense-build-${{ $GITHUB_LRS_COMMIT_HASH }}
         restore-keys: |
           ${{ runner.os }}-realsense-build-
     
