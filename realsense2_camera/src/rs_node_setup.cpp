@@ -35,6 +35,7 @@ void BaseRealSenseNode::setup()
     monitoringProfileChanges();
     updateSensors();
     publishServices();
+    publishActions();
 }
 
 void BaseRealSenseNode::monitoringProfileChanges()
@@ -515,6 +516,23 @@ void BaseRealSenseNode::publishServices()
             [&](const realsense2_camera_msgs::srv::CalibConfigWrite::Request::SharedPtr req,
                         realsense2_camera_msgs::srv::CalibConfigWrite::Response::SharedPtr res)
                         {CalibConfigWriteService(req, res);});
+}
+
+void BaseRealSenseNode::publishActions()
+{
+
+    using namespace std::placeholders;
+
+    _triggered_calibration_action_server = rclcpp_action::create_server<TriggeredCalibration>(
+      _node.get_node_base_interface(),
+      _node.get_node_clock_interface(),
+      _node.get_node_logging_interface(),
+      _node.get_node_waitables_interface(),
+      "~/triggered_calibration",
+      std::bind(&BaseRealSenseNode::handle_goal, this, _1, _2),
+      std::bind(&BaseRealSenseNode::handle_cancel, this, _1),
+      std::bind(&BaseRealSenseNode::handle_accepted, this, _1));
+
 }
 
 void BaseRealSenseNode::getDeviceInfo(const realsense2_camera_msgs::srv::DeviceInfo::Request::SharedPtr,
