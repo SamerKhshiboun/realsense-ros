@@ -25,24 +25,15 @@
 #include <cv_bridge/cv_bridge.h>
 #endif
 
+#include <ros_actions.h>
+#include <ros_services.h>
+#include <ros_messages.h>
+
 #include <diagnostic_updater/diagnostic_updater.hpp>
 #include <diagnostic_updater/publisher.hpp>
-#include "realsense2_camera_msgs/msg/imu_info.hpp"
-#include "realsense2_camera_msgs/msg/extrinsics.hpp"
-#include "realsense2_camera_msgs/msg/metadata.hpp"
-#include "realsense2_camera_msgs/msg/rgbd.hpp"
-#include "realsense2_camera_msgs/srv/device_info.hpp"
-#include "realsense2_camera_msgs/srv/calib_config_read.hpp"
-#include "realsense2_camera_msgs/srv/calib_config_write.hpp"
-#include "rclcpp_action/rclcpp_action.hpp"
-#include "realsense2_camera_msgs/action/triggered_calibration.hpp"
 #include <librealsense2/hpp/rs_processing.hpp>
 #include <librealsense2/rs_advanced_mode.hpp>
-
 #include <sensor_msgs/image_encodings.hpp>
-#include <sensor_msgs/msg/camera_info.hpp>
-#include <sensor_msgs/msg/image.hpp>
-#include <sensor_msgs/msg/imu.hpp>
 
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2_ros/transform_broadcaster.h>
@@ -62,9 +53,6 @@
 #include <atomic>
 #include <thread>
 
-using realsense2_camera_msgs::msg::Extrinsics;
-using realsense2_camera_msgs::msg::IMUInfo;
-using realsense2_camera_msgs::msg::RGBD;
 
 #define FRAME_ID(sip) (static_cast<std::ostringstream&&>(std::ostringstream() << _camera_name << "_" << STREAM_NAME(sip) << "_frame")).str()
 #define IMU_FRAME_ID (static_cast<std::ostringstream&&>(std::ostringstream() << _camera_name << "_imu_frame")).str()

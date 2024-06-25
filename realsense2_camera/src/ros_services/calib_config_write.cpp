@@ -1,0 +1,33 @@
+// Copyright 2023 Intel Corporation. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include "../../include/base_realsense_node.h"
+
+using namespace realsense2_camera;
+using namespace rs2;
+
+void BaseRealSenseNode::CalibConfigWriteService(const realsense2_camera_msgs::srv::CalibConfigWrite::Request::SharedPtr req,
+    realsense2_camera_msgs::srv::CalibConfigWrite::Response::SharedPtr res){
+    try
+    {
+        rs2_calibration_config calib_config = _dev.as<rs2::auto_calibrated_device>().json_string_to_calibration_config(req->calib_config);
+        _dev.as<rs2::auto_calibrated_device>().set_calibration_config(calib_config);
+        res->success = true;
+    }
+    catch (const std::exception &e)
+    {
+        res->success = false;
+        res->error_message = std::string("Exception occurred: ") + e.what();
+    }
+}

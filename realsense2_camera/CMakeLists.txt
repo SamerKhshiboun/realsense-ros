@@ -146,7 +146,18 @@ set(SOURCES
     src/profile_manager.cpp
     src/image_publisher.cpp
     src/tfs.cpp
-    src/actions.cpp
+  )
+
+list(APPEND SOURCE
+    src/ros_services/ros_services.cpp
+    src/ros_services/device_info.cpp
+    src/ros_services/calib_config_read.cpp
+    src/ros_services/calib_config_write.cpp
+  )
+
+list(APPEND SOURCE
+    src/ros_actions/ros_actions.cpp
+    src/ros_services/triggered_calibration.cpp
   )
 
 if (BUILD_ACCELERATE_GPU_WITH_GLSL)
@@ -207,6 +218,11 @@ set(INCLUDES
     include/ros_param_backend.h
     include/profile_manager.h
     include/image_publisher.h)
+
+list(APPEND INCLUDE
+    include/ros_actions.h
+    include/ros_services.h
+  )
 
 if (BUILD_ACCELERATE_GPU_WITH_GLSL)
   list(APPEND INCLUDES include/gl_window.h)

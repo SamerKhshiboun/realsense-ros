@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../include/base_realsense_node.h"
+#include "../../include/base_realsense_node.h"
 using namespace realsense2_camera;
 using namespace rs2;
 
