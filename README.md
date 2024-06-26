@@ -677,7 +677,7 @@ Each of the above filters have it's own parameters, following the naming convent
   - Type `ros2 interface show realsense2_camera_msgs/action/TriggeredCalibration` for the full request/result/feedback fields.
     ```
     # request
-    string json "calib run"  # default value
+    string json
     ---
     # result
     string calibration
@@ -687,9 +687,22 @@ Each of the above filters have it's own parameters, following the naming convent
     float32 progress
 
     ```
-  - To use from command line: `ros2 action send_goal /camera/camera/triggered_calibration realsense2_camera_msgs/action/TriggeredCalibration '{json: "{calib run}"}'` or even with an empty request `ros2 action send_goal /camera/camera/triggered_calibration realsense2_camera_msgs/action/TriggeredCalibration ''` because the default behavior is already calib run.
+  - To use from command line: `ros2 action send_goal /camera/camera/triggered_calibration realsense2_camera_msgs/action/TriggeredCalibration "{json: '{\"calib_type\": 1}' }"`
   - The action gives an updated feedback about the progress (%) if the client asks for feedback.
   - If succeded, the action writes the new calibration table to the flash. It also returns the new calibration table as json string and the health as float32
+
+  ```
+  Sending goal:
+     json: '{"calib_type": 1}'
+
+  Goal accepted with ID: acf60856af8046a5b8559039101a4da6
+
+  Result:
+      calibration: '[0,240,1,0,0,184,15,10,5,147,120,230,190,171,180,255,62,186,95,76,63,168,99,253,62,60,35,255,62,162,216,96,189,176,61,115,61,226,129,5,58,109,246,24,186,152,85,151,188,45,12,255,62,166,220,75,63,83,209,254,62,217,193,0,63,165,219,113,189,94,31,133,61,145,108,249,185,36,139,211,185,74,43,171,188,153,252,127,63,155,185,168,187,41,21,16,60,88,20,168,59,248,254,127,63,246,49,20,59,107,69,16,188,51,59,17,187,76,253,127,63,98,253,127,63,132,81,161,187,219,115,244,187,80,197,160,59,11,255,127,63,125,234,19,187,39,208,244,59,230,130,17,59,2,254,127,63,3,196,189,194,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,41,126,113,68,41,126,113,68,134,88,110,68,66,3,7,68,198,254,32,68,198,254,32,68,175,229,30,68,87,4,180,67,187,49,193,67,187,49,193,67,56,173,158,67,54,5,112,67,147,81,213,67,147,81,213,67,238,137,210,67,193,5,112,67,198,254,160,67,198,254,160,67,175,229,158,67,87,4,52,67,147,81,85,67,147,81,85,67,238,137,82,67,193,5,240,66,187,49,65,67,187,49,65,67,56,173,30,67,54,5,240,66,41,126,113,67,41,126,113,67,134,88,110,67,242,252,6,67,198,254,32,68,198,254,32,68,175,229,30,68,87,4,200,67,41,126,241,67,41,126,241,67,134,88,238,67,66,3,135,67,76,229,16,68,76,229,16,68,212,3,178,67,232,3,180,67,70,213,231,67,70,213,231,67,119,105,142,67,32,3,144,67,198,254,32,68,198,254,32,68,175,229,30,68,87,4,200,67,0,5,32,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]'
+  health: -3.615260601043701
+
+  Goal finished with status: SUCCEEDED
+  ```
 
 <hr>
 
